@@ -1,0 +1,22 @@
+# Python bytecode and cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# IDE files (if you use one)
+.idea/  # PyCharm
+.vscode/  # VS Code
+
+# Logs or temp files
+*.log
+*.tmp
+
+# Sensitive data
+cookies.txt
+secrets.txt
