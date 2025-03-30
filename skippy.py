@@ -32,8 +32,8 @@ def analyze_site(base_url):
     options.binary_location = "/usr/bin/chromium"  # Confirmed path
     
     try:
-        print("Installing ChromeDriver for Chromium 134...")
-        driver_path = ChromeDriverManager(version="134.0.6998.117").install()
+        print("Installing ChromeDriver...")
+        driver_path = ChromeDriverManager().install()
         print(f"ChromeDriver at: {driver_path}")
         os.chmod(driver_path, os.stat(driver_path).st_mode | stat.S_IEXEC)
         driver = webdriver.Chrome(executable_path=driver_path, options=options)
@@ -154,7 +154,7 @@ def cookie_skip(base_url, proxy):
     options.binary_location = "/usr/bin/chromium"
     
     try:
-        driver_path = ChromeDriverManager(version="134.0.6998.117").install()
+        driver_path = ChromeDriverManager().install()
         os.chmod(driver_path, os.stat(driver_path).st_mode | stat.S_IEXEC)
         driver = webdriver.Chrome(executable_path=driver_path, options=options)
         print("Selenium for Cookie Skip initialized.")
