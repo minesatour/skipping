@@ -28,19 +28,21 @@ def analyze_site(base_url):
     options = Options()
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    # Comment out headless for debugging on Chromebook
-    # options.add_argument("--headless")
+    # Explicitly set Chrome binary for Chromebook
+    options.binary_location = "/usr/bin/chromium"  # Adjust if different
     
     try:
         driver = webdriver.Chrome(service=ChromeDriverManager().install(), options=options)
+        print("Selenium initialized.")
     except Exception as e:
-        print(f"Selenium setup failed: {e}")
-        return 10  # Low score if analysis fails
+        print(f"Selenium failed: {e}")
+        print("Skipping analysis due to setup error.")
+        return 50  # Default score if analysis bombs
     
     print(f"Analyzing {base_url}...")
     try:
         driver.get(base_url)
-        time.sleep(2)  # Let page load
+        time.sleep(2)
     except Exception as e:
         print(f"Failed to load {base_url}: {e}")
         driver.quit()
@@ -67,7 +69,7 @@ def analyze_site(base_url):
         if lax_security:
             score += 10
     except:
-        score -= 10  # Network issue penalizes slightly
+        score -= 10
     
     driver.quit()
     score = max(10, min(90, score))
@@ -145,10 +147,11 @@ def cookie_skip(base_url, proxy):
     options = Options()
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    # options.add_argument("--headless")  # Uncomment for headless
+    options.binary_location = "/usr/bin/chromium"  # Chromebook Linux path
     
     try:
         driver = webdriver.Chrome(service=ChromeDriverManager().install(), options=options)
+        print("Selenium for Cookie Skip initialized.")
     except Exception as e:
         print(f"Cookie Skip failed at setup: {e}")
         return
