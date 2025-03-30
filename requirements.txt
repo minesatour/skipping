@@ -1,1 +1,4 @@
-requests==2.28.1
+# Core dependencies for Super Skipper Script
+requests==2.31.0          # HTTP requests for skipping payment
+selenium==4.15.2          # Headless Chrome for cookie/CSRF grabbing
+webdriver-manager==4.0.1  # Auto-manages ChromeDriver
