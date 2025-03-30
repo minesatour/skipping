@@ -1,22 +1,27 @@
-# Python bytecode and cache
+# Python bytecode and caches
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
 
 # Virtual environments
 venv/
 env/
 .venv/
 
-# IDE files (if you use one)
-.idea/  # PyCharm
-.vscode/  # VS Code
+# Logs from the script
+success.txt
+errors.txt
 
-# Logs or temp files
+# Selenium/Webdriver files
+chromedriver
+chromedriver.exe
 *.log
-*.tmp
 
-# Sensitive data
-cookies.txt
-secrets.txt
+# Local config or sensitive data
+proxy_list.txt
+*.env
+*.secret
+
+# Misc
+.DS_Store
+*.swp
